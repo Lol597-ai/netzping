@@ -1,1 +1,358 @@
-index.html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetzPing – Internet Ping & Speed Diagnose</title>
+    <meta name="description" content="Teste Ping, Jitter und Packet Loss. Tipps gegen langsames Internet, hohe Latenz und WLAN-Probleme.">
+    <style>
+        :root {
+            --primary: #1e88e5;
+            --primary-dark: #1565c0;
+            --bg: #f5f7fb;
+            --card-bg: #ffffff;
+            --text-main: #222;
+            --text-muted: #666;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+        }
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid #e0e4ee;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--primary);
+        }
+        .logo span {
+            color: var(--text-main);
+            font-weight: 400;
+        }
+        .nav-links a {
+            margin-left: 18px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        main {
+            max-width: 1100px;
+            margin: 20px auto 40px;
+            padding: 0 20px;
+        }
+        .hero {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .hero-title {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .hero-sub {
+            color: var(--text-muted);
+            margin-bottom: 18px;
+        }
+        .badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: var(--primary-dark);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        .hero-list li {
+            margin-left: 18px;
+            margin-bottom: 4px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            border: 1px solid #e0e4ee;
+        }
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        .results {
+            margin-top: 16px;
+            font-size: 15px;
+        }
+        .results div { margin-bottom: 4px; }
+        .results span.label { color: var(--text-muted); }
+        .results span.value { font-weight: 600; }
+        .ad-box {
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px dashed #c5c9d8;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: left;
+        }
+        .ad-box strong { display: block; margin-bottom: 4px; }
+        section {
+            margin-top: 40px;
+        }
+        section h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        section p {
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+        .pill {
+            display: inline-block;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4338ca;
+            margin-bottom: 6px;
+        }
+        footer {
+            border-top: 1px solid #e0e4ee;
+            margin-top: 40px;
+            padding: 16px 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-right: 12px;
+        }
+        footer a:hover { color: var(--primary); }
+        @media (max-width: 800px) {
+            .hero {
+                grid-template-columns: minmax(0, 1fr);
+            }
+            .grid-3 {
+                grid-template-columns: minmax(0, 1fr);
+            }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="nav">
+        <div class="logo">NetzPing<span>.de</span></div>
+        <div class="nav-links">
+            <a href="#test">Ping-Test</a>
+            <a href="#slow">Internet langsam</a>
+            <a href="#pingtips">Ping verbessern</a>
+            <a href="#anbieter">Anbieter-Vergleich</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div>
+            <div class="badge">Schnelle Diagnose für dein Internet</div>
+            <h1 class="hero-title">Ping, Jitter & Packet Loss in Sekunden testen.</h1>
+            <p class="hero-sub">
+                Finde heraus, warum dein Internet laggt – mit klaren Werten und einfachen Erklärungen.
+            </p>
+            <ul class="hero-list">
+                <li>Ideal für Gaming, Streaming und Home-Office</li>
+                <li>Keine Installation, direkt im Browser</li>
+                <li>Tipps zur Verbesserung deines Pings</li>
+            </ul>
+        </div>
+        <div id="test" class="card">
+            <h2>Ping-Test starten</h2>
+            <p style="font-size:13px; color:var(--text-muted);">
+                Wir messen mehrmals die Antwortzeit zu einem Server und berechnen Ping, Jitter und Packet Loss.
+            </p>
+            <button class="btn" onclick="startTest()">Test jetzt starten</button>
+            <div class="results">
+                <div><span class="label">Ping:</span> <span class="value" id="ping">–</span></div>
+                <div><span class="label">Jitter:</span> <span class="value" id="jitter">–</span></div>
+                <div><span class="label">Packet Loss:</span> <span class="value" id="loss">–</span></div>
+            </div>
+            <div class="ad-box">
+                <strong>Werbefläche</strong>
+                Hier kannst du später Google AdSense oder Affiliate-Banner einbinden (z. B. Router, Internetanbieter).
+            </div>
+        </div>
+    </section>
+
+    <section id="slow">
+        <h2>Internet langsam? Häufige Ursachen & schnelle Lösungen</h2>
+        <p>
+            Langsames Internet kann viele Gründe haben: überlastetes WLAN, schwacher Router, falscher Anbieter oder einfach
+            zu viele Geräte im Netzwerk. Wichtig ist, zuerst zu unterscheiden: ist dein <strong>Ping hoch</strong> oder ist
+            nur die <strong>Download-Geschwindigkeit</strong> niedrig?
+        </p>
+        <p>
+            Ein hoher Ping sorgt für Verzögerungen beim Gaming und in Video-Calls. Eine niedrige Bandbreite macht Downloads
+            und Streams langsam. Mit unserem Test bekommst du einen ersten Eindruck – darunter findest du konkrete Tipps.
+        </p>
+    </section>
+
+    <section id="pingtips">
+        <h2>Ping verbessern – 10 praktische Tipps</h2>
+        <div class="grid-3">
+            <div class="card">
+                <div class="pill">Tipp 1</div>
+                <h3>Nutze LAN statt WLAN</h3>
+                <p>
+                    Ein Netzwerkkabel ist fast immer stabiler und schneller als WLAN. Besonders beim Gaming lohnt sich ein
+                    direkter Anschluss an den Router.
+                </p>
+            </div>
+            <div class="card">
+                <div class="pill">Tipp 2</div>
+                <h3>Router neu starten</h3>
+                <p>
+                    Ein einfacher Neustart kann Routing-Probleme lösen und die Verbindung zum Anbieter erneuern. Klingt banal,
+                    hilft aber oft.
+                </p>
+            </div>
+            <div class="card">
+                <div class="pill">Tipp 3</div>
+                <h3>Hintergrund-Downloads stoppen</h3>
+                <p>
+                    Updates, Cloud-Sync oder Downloads im Hintergrund können deinen Ping massiv verschlechtern. Schließe
+                    unnötige Programme während wichtiger Online-Sessions.
+                </p>
+            </div>
+        </div>
+        <p style="margin-top:14px; font-size:13px; color:var(--text-muted);">
+            Weitere Inhalte kannst du später als eigene Unterseiten auslagern (z. B. „WLAN verbessern“, „Router-Empfehlungen“).
+        </p>
+    </section>
+
+    <section id="anbieter">
+        <h2>Internetanbieter vergleichen</h2>
+        <p>
+            Nicht jeder Anschluss ist gleich. In manchen Regionen ist Kabel-Internet besser, in anderen Glasfaser oder DSL.
+            Langfristig lohnt sich ein Anbieter, der stabile Latenzen und ausreichend Bandbreite bietet.
+        </p>
+        <p>
+            Hier kannst du später <strong>Affiliate-Links</strong> zu Vergleichsportalen (z. B. Check24, Verivox) oder direkt
+            zu Anbietern einbauen. Jeder abgeschlossene Vertrag über deinen Link kann dir eine Provision bringen.
+        </p>
+        <div class="card">
+            <h3>Platzhalter: Anbieter-Vergleich</h3>
+            <p style="font-size:13px; color:var(--text-muted);">
+                Hier könntest du z. B. eine Tabelle mit Anbietern, Bandbreite, Preis und Link zum Angebot einbauen.
+            </p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
+        <div>© <span id="year"></span> NetzPing – Internet Diagnose</div>
+        <div>
+            <a href="#">Impressum (Platzhalter)</a>
+            <a href="#">Datenschutz (Platzhalter)</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+async function startTest() {
+    const pingEl = document.getElementById("ping");
+    const jitterEl = document.getElementById("jitter");
+    const lossEl = document.getElementById("loss");
+
+    pingEl.textContent = "Test läuft…";
+    jitterEl.textContent = "–";
+    lossEl.textContent = "–";
+
+    const pingResults = [];
+    let lostPackets = 0;
+    const totalPackets = 10;
+
+    for (let i = 0; i < totalPackets; i++) {
+        const start = performance.now();
+        try {
+            await fetch("https://www.google.com", { mode: "no-cors", cache: "no-store" });
+            const end = performance.now();
+            pingResults.push(end - start);
+        } catch (e) {
+            lostPackets++;
+        }
+    }
+
+    if (pingResults.length === 0) {
+        pingEl.textContent = "Fehler bei der Messung";
+        jitterEl.textContent = "–";
+        lossEl.textContent = ((lostPackets / totalPackets) * 100).toFixed(0) + " %";
+        return;
+    }
+
+    const avgPing = pingResults.reduce((a, b) => a + b, 0) / pingResults.length;
+    const jitter = Math.max(...pingResults) - Math.min(...pingResults);
+    const lossPercent = (lostPackets / totalPackets) * 100;
+
+    pingEl.textContent = avgPing.toFixed(1) + " ms";
+    jitterEl.textContent = jitter.toFixed(1) + " ms";
+    lossEl.textContent = lossPercent.toFixed(0) + " %";
+}
+
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+<!-- ⭐ GOOGLE ANALYTICS – DEINE ID IST EINGEBAUT ⭐ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZJM2HG1HWN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZJM2HG1HWN');
+</script>
+
+</body>
+</html>
